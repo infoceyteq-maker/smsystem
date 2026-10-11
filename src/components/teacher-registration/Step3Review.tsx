@@ -163,7 +163,7 @@ export const Step3Review: React.FC<Step3ReviewProps> = ({
             </div>
             <div className="flex justify-between py-1">
               <span className="text-gray-500">Campus Assignment</span>
-              <span className="text-gray-900 font-semibold">Aster College · Colombo</span>
+              <span className="text-gray-900 font-semibold">Sri Sumangala College · Kandy</span>
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@ export const Step3Review: React.FC<Step3ReviewProps> = ({
           className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#007AFF] focus:ring-[#007AFF]"
         />
         <label htmlFor="confirm-terms" className="text-xs text-gray-600 leading-relaxed cursor-pointer select-none">
-          I certify that the information entered above is accurate and matches my official government teacher service record. I understand this profile will be reviewed by the Master Admin and routed to the Colombo Campus registry.
+          I certify that the information entered above is accurate and matches my official government teacher service record. I understand this profile will be reviewed by the Master Admin and routed to the Sri Sumangala College registry.
         </label>
       </div>
 

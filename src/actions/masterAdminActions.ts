@@ -66,7 +66,7 @@ const SEEDED_ACTIVITIES: ActivityItem[] = [
     id: 'act-1',
     type: 'signin',
     title: 'Master Admin signed in',
-    subtitle: 'Nadeesha Perera · Colombo campus',
+    subtitle: 'Nadeesha Perera · Sri Sumangala College, Kandy',
     time: '09:41',
     timestamp: '2026-10-11T09:41:00Z',
   },

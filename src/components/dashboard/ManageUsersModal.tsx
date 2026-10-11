@@ -37,7 +37,7 @@ export const ManageUsersModal: React.FC<ManageUsersModalProps> = ({
           Manage Institution Users & RBAC
         </h3>
         <p className="text-xs text-gray-500 mt-0.5 mb-4">
-          Colombo Campus roles, access permissions, and Supabase JWT status.
+          Sri Sumangala College Kandy roles, access permissions, and Supabase JWT status.
         </p>
 
         {/* Search bar */}
@@ -84,7 +84,7 @@ export const ManageUsersModal: React.FC<ManageUsersModalProps> = ({
                   <span>Active</span>
                 </span>
                 <span className="text-[10px] text-gray-400 mt-1 font-mono">
-                  {user.designation || user.gradeLevel || 'Colombo Campus'}
+                  {user.designation || user.gradeLevel || 'Sri Sumangala College, Kandy'}
                 </span>
               </div>
             </div>

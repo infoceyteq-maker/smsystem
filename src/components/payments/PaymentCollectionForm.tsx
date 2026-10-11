@@ -272,8 +272,8 @@ export const PaymentCollectionForm: React.FC<PaymentCollectionFormProps> = ({ on
           <div className="bg-white border border-gray-200 px-3.5 py-2 rounded-xl flex items-center gap-2.5 shadow-xs text-xs">
             <Building className="w-4 h-4 text-[#007AFF]" />
             <div>
-              <p className="font-bold text-gray-900 leading-tight">Colombo Campus Bursary</p>
-              <p className="text-[10px] text-gray-400 leading-tight">Account No: 0048-9921-2026</p>
+              <p className="font-bold text-gray-900 leading-tight">Sri Sumangala College Bursary</p>
+              <p className="text-[10px] text-gray-400 leading-tight">Kandy Campus · Account: 0048-9921-1934</p>
             </div>
           </div>
         </div>
@@ -288,7 +288,7 @@ export const PaymentCollectionForm: React.FC<PaymentCollectionFormProps> = ({ on
               <span>Term 2 Fee Collection Overview</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
-              Target vs realized tuition, exam fees, and lab levies for Colombo Campus.
+              Target vs realized tuition, exam fees, and lab levies for Sri Sumangala College Kandy.
             </p>
           </div>
           <span className="text-xs font-mono font-bold text-gray-700 bg-gray-100 px-2.5 py-1 rounded-lg">
@@ -531,7 +531,7 @@ export const PaymentCollectionForm: React.FC<PaymentCollectionFormProps> = ({ on
                   {selectedStudent.fullName}
                 </p>
                 <p className="text-xs text-gray-500 font-medium">
-                  {selectedStudent.gradeLevel} · Colombo Campus
+                  {selectedStudent.gradeLevel} · Sri Sumangala College, Kandy
                 </p>
               </div>
 

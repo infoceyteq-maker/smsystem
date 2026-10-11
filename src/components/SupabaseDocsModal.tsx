@@ -43,15 +43,15 @@ CREATE TABLE IF NOT EXISTS public.tenants (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Seed Colombo Campus
+-- Seed Sri Sumangala College Kandy
 INSERT INTO public.tenants (id, name, code, academic_year, location)
-VALUES ('campus-colombo-2026', 'Aster College - Colombo Campus', 'COL-2026', 2026, 'Colombo, Sri Lanka')
+VALUES ('campus-kandy-1934', 'Sri Sumangala College - Kandy', 'SSCK-1934', 2026, 'Kandy, Sri Lanka')
 ON CONFLICT (id) DO NOTHING;
 
 -- Profiles Table (Synced with Supabase auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-colombo-2026',
+  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-kandy-1934',
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 CREATE TABLE IF NOT EXISTS public.students (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   profile_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
-  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-colombo-2026',
+  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-kandy-1934',
   admission_no TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL,
   date_of_birth DATE,
@@ -99,7 +99,7 @@ ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.staff ENABLE ROW LEVEL SECURITY;`;
 
-  const envCode = `# Aster College ERP - Supabase Credentials
+  const envCode = `# Sri Sumangala College Kandy ERP - Supabase Credentials
 # Add these in your Vercel / Next.js / Vite environment settings:
 
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co

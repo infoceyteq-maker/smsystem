@@ -64,8 +64,8 @@ export async function signInWithCredentials(
         email: authData.user?.email || emailToAuth,
         fullName: fullProfile?.full_name || 'ERP User',
         role: fullProfile?.role || 'student',
-        tenantId: fullProfile?.tenant_id || 'campus-colombo-2026',
-        tenantName: 'Colombo campus · 2026',
+        tenantId: fullProfile?.tenant_id || 'campus-kandy-1934',
+        tenantName: 'Sri Sumangala College · Kandy',
         admissionNo: fullProfile?.admission_no,
         designation: fullProfile?.designation,
         gradeLevel: fullProfile?.grade_level,
@@ -142,6 +142,6 @@ export async function requestPasswordReset(identifier: string): Promise<{ succes
   await new Promise((resolve) => setTimeout(resolve, 600));
   return {
     success: true,
-    message: `A secure password reset authorization link was sent to the official institution email linked to "${identifier}". Please check your inbox or contact the Aster College IT Registrar.`,
+    message: `A secure password reset authorization link was sent to the official institution email linked to "${identifier}". Please check your inbox or contact the Sri Sumangala College IT Registrar.`,
   };
 }

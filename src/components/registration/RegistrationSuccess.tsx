@@ -31,7 +31,7 @@ export const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
           Submission Received
         </h2>
         <p className="text-xs sm:text-sm text-gray-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-          The student profile for <strong className="text-gray-900">{result.fullName}</strong> has been logged to the Colombo campus queue.
+          The student profile for <strong className="text-gray-900">{result.fullName}</strong> has been logged to the Sri Sumangala College queue.
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500 font-medium">Campus Tenant</span>
-          <span className="text-xs text-gray-700 font-semibold">Aster College · Colombo 2026</span>
+          <span className="text-xs text-gray-700 font-semibold">Sri Sumangala College · Kandy 2026</span>
         </div>
       </div>
 

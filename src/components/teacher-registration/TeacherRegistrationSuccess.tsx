@@ -31,7 +31,7 @@ export const TeacherRegistrationSuccess: React.FC<TeacherRegistrationSuccessProp
           Submission Received
         </h2>
         <p className="text-xs sm:text-sm text-gray-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-          The teacher application for <strong className="text-gray-900">{result.fullName}</strong> has been transmitted to the Aster College executive review queue.
+          The teacher application for <strong className="text-gray-900">{result.fullName}</strong> has been transmitted to the Sri Sumangala College executive review queue.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export const TeacherRegistrationSuccess: React.FC<TeacherRegistrationSuccessProp
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500 font-medium">Review Status</span>
           <span className="text-xs text-amber-700 font-bold">
-            Pending Colombo Executive Approval
+            Pending Sri Sumangala College Executive Approval
           </span>
         </div>
       </div>

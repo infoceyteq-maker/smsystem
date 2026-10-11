@@ -93,7 +93,7 @@ export const InvitationModal: React.FC<InvitationModalProps> = ({
               Invitation & Link Generator
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
-              Self-onboarding tokens for Colombo Campus
+              Self-onboarding tokens for Sri Sumangala College, Kandy
             </p>
           </div>
           <button

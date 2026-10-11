@@ -11,10 +11,10 @@ import { InvitationModal } from './InvitationModal';
 import { ApprovalsModal } from './ApprovalsModal';
 import { ManageUsersModal } from './ManageUsersModal';
 
-// Final Modules
 import { ApprovalDashboard } from '../approvals/ApprovalDashboard';
 import { DailyAttendanceForm } from '../attendance/DailyAttendanceForm';
 import { PaymentCollectionForm } from '../payments/PaymentCollectionForm';
+import { SchoolHeaderRibbon } from './SchoolHeaderRibbon';
 
 import { 
   getMasterAdminStats, 
@@ -36,6 +36,7 @@ interface MasterAdminDashboardProps {
   onReturnToLogin?: () => void;
   onOpenRegistration?: () => void;
   onOpenTeacherRegistration?: () => void;
+  onOpenSuperAdmin?: () => void;
   initialTab?: string;
 }
 
@@ -43,6 +44,7 @@ export const MasterAdminDashboard: React.FC<MasterAdminDashboardProps> = ({
   onReturnToLogin,
   onOpenRegistration,
   onOpenTeacherRegistration,
+  onOpenSuperAdmin,
   initialTab = 'overview',
 }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -96,6 +98,7 @@ export const MasterAdminDashboard: React.FC<MasterAdminDashboardProps> = ({
         onOpenApprovals={() => setActiveTab('approvals')}
         onOpenRegistration={onOpenRegistration}
         onOpenTeacherRegistration={onOpenTeacherRegistration}
+        onOpenSuperAdmin={onOpenSuperAdmin}
         isMobileOpen={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
@@ -119,6 +122,9 @@ export const MasterAdminDashboard: React.FC<MasterAdminDashboardProps> = ({
         ) : (
           /* Default: Overview Tab */
           <>
+            {/* Sri Sumangala College Kandy 1-inch Header Line with School Colors (Blue, Yellow, White) & Top-Right Logo */}
+            <SchoolHeaderRibbon />
+
             {/* Top 4 Stat Metric Cards (Row 1) */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 my-2">
               <StatCard

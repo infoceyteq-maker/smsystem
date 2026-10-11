@@ -86,7 +86,7 @@ export const WeeklyAttendanceChart: React.FC<WeeklyAttendanceChartProps> = ({
 
       {/* Footer Notes */}
       <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
-        <span>Benchmark: Colombo Campus 92%</span>
+        <span>Benchmark: Sri Sumangala College 92%</span>
         <span className="text-[#007AFF] font-medium">+2.4% above threshold</span>
       </div>
     </div>

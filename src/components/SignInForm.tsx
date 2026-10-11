@@ -3,6 +3,7 @@ import { Eye, EyeOff, X, AlertCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { signInWithCredentials } from '../actions/authActions';
 import { UserProfile } from '../types/erp';
+import { SchoolLogo } from './common/SchoolLogo';
 
 interface SignInFormProps {
   onSignInSuccess: (user: UserProfile) => void;
@@ -70,30 +71,31 @@ export const SignInForm: React.FC<SignInFormProps> = ({
 
   return (
     <div className="w-full max-w-[420px] mx-auto px-4 py-8 sm:py-10 flex flex-col items-center select-none animate-in fade-in duration-300">
-      {/* 1. Squircle Graduation Cap Badge */}
-      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-blue-50 border border-blue-200/80 flex items-center justify-center mb-6 shadow-md shadow-blue-500/10 ring-1 ring-blue-500/20 group transition hover:scale-105">
-        <svg
-          className="w-10 h-10 sm:w-11 sm:h-11 text-[#007AFF] transition"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Graduation Cap Outlines */}
-          <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
-          <path d="M22 10v6" />
-          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-        </svg>
+      {/* 1. Official Sri Sumangala College Crest Badge */}
+      <div className="mb-4 flex flex-col items-center">
+        <SchoolLogo size="2xl" interactive={true} />
+        {/* College Colors Tricolor Line */}
+        <div className="w-20 h-1.5 rounded-full flex overflow-hidden mt-3 shadow-2xs border border-gray-200">
+          <div className="w-1/3 bg-[#0B3C96]" />
+          <div className="w-1/3 bg-[#FFC72C]" />
+          <div className="w-1/3 bg-white" />
+        </div>
       </div>
 
       {/* 2. Heading & Subtitle */}
-      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 text-center">
-        Sign In to ERP
+      <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900 text-center">
+        Sri Sumangala College
       </h1>
-      <p className="text-xs sm:text-sm text-gray-500 text-center mt-1.5 mb-7">
-        One secure home for your school journey.
+      <div className="flex items-center gap-1.5 mt-1">
+        <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#0B3C96]/10 text-[#0B3C96] border border-[#0B3C96]/20">
+          KANDY
+        </span>
+        <span className="text-xs font-semibold text-amber-700">
+          Estd - 1934
+        </span>
+      </div>
+      <p className="text-xs text-gray-500 text-center mt-1.5 mb-6 font-medium">
+        School Management System (ERP) · Kandy
       </p>
 
       {/* Error Callout Banner if authentication failed */}

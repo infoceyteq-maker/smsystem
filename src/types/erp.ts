@@ -1,11 +1,35 @@
-export type UserRole = 'master_admin' | 'normal_admin' | 'teacher' | 'student' | 'parent';
+export type UserRole = 'super_admin' | 'master_admin' | 'normal_admin' | 'teacher' | 'student' | 'parent';
 
-export interface CampusTenant {
-  id: string;
-  name: string;
-  code: string;
-  year: number;
+export interface SchoolColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+}
+
+export interface SchoolTenant {
+  id: string; // e.g. "school-ssck-kandy"
+  name: string; // e.g. "Sri Sumangala College - Kandy"
+  code: string; // e.g. "SSCK-1934"
+  establishedYear: number;
   location: string;
+  adminEmail: string;
+  adminName: string;
+  phone: string;
+  status: 'active' | 'pending' | 'suspended';
+  subscriptionPlan: 'starter' | 'professional' | 'enterprise';
+  studentCount: number;
+  teacherCount: number;
+  colors: SchoolColors;
+  subdomain: string; // e.g. "ssck" -> ssck.ceyteq.edu.lk
+  motto?: string;
+  logoUrl?: string;
+  approvedAt?: string;
+  createdAt: string;
+}
+
+export interface CampusTenant extends SchoolTenant {
+  // Backwards compatibility alias
+  year: number;
   isActive: boolean;
 }
 

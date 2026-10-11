@@ -72,7 +72,7 @@ export const ProfileDetailDrawer: React.FC<ProfileDetailDrawerProps> = ({
             </div>
             <div className="flex items-center gap-2.5 text-gray-600">
               <MapPin className="w-4 h-4 text-gray-400" />
-              <span>Colombo 03 District, Western Province, Sri Lanka</span>
+              <span>Kandy District, Central Province, Sri Lanka</span>
             </div>
           </div>
 
@@ -88,7 +88,7 @@ export const ProfileDetailDrawer: React.FC<ProfileDetailDrawerProps> = ({
             </div>
             <div className="flex items-center justify-between text-gray-600">
               <span>Tenant Assignment</span>
-              <span className="font-medium text-gray-900">Aster College · Colombo (2026)</span>
+              <span className="font-medium text-gray-900">Sri Sumangala College · Kandy</span>
             </div>
             <div className="flex items-center justify-between text-gray-600">
               <span>Authorization Action</span>

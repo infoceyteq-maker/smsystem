@@ -48,7 +48,7 @@ export const SendInvitesModal: React.FC<SendInvitesModalProps> = ({
           Send ERP Registration Invites
         </h3>
         <p className="text-xs text-gray-500 mt-1 mb-5">
-          Generate secure, self-onboarding registration links for Aster College Colombo Campus.
+          Generate secure, self-onboarding registration links for Sri Sumangala College Kandy.
         </p>
 
         {successMessage ? (

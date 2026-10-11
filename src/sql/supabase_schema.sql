@@ -13,6 +13,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
     CREATE TYPE user_role_enum AS ENUM (
+      'super_admin',
       'master_admin',
       'normal_admin',
       'teacher',
@@ -22,25 +23,50 @@ BEGIN
   END IF;
 END $$;
 
--- 3. Tenants Table (Multi-Campus SaaS Architecture)
+-- 3. Tenants / Schools Table (Multi-School SaaS Architecture)
 CREATE TABLE IF NOT EXISTS public.tenants (
-  id TEXT PRIMARY KEY DEFAULT 'campus-colombo-2026',
+  id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   code TEXT NOT NULL UNIQUE,
   academic_year INT NOT NULL DEFAULT 2026,
   location TEXT NOT NULL,
+  admin_email TEXT,
+  phone TEXT,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'pending', 'suspended')),
+  subscription_plan TEXT DEFAULT 'enterprise' CHECK (subscription_plan IN ('starter', 'professional', 'enterprise')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Seed Default Colombo Campus
-INSERT INTO public.tenants (id, name, code, academic_year, location)
-VALUES ('campus-colombo-2026', 'Aster College - Colombo Campus', 'COL-2026', 2026, 'Colombo, Sri Lanka')
+-- Seed Initial Multi-School Tenants
+INSERT INTO public.tenants (id, name, code, academic_year, location, admin_email, phone, status, subscription_plan)
+VALUES 
+  ('campus-kandy-1934', 'Sri Sumangala College - Kandy', 'SSCK-1934', 2026, 'Kandy, Sri Lanka', 'master.admin@srisumangala.edu.lk', '+94 81 223 4567', 'active', 'enterprise'),
+  ('school-kck-kandy', 'Kingswood College - Kandy', 'KCK-1891', 2026, 'Peradeniya Road, Kandy', 'principal@kingswood.lk', '+94 81 222 3456', 'active', 'professional'),
+  ('school-dck-kandy', 'Dharmaraja College - Kandy', 'DCK-1887', 2026, 'Lake Round, Kandy', 'admin@dharmaraja.lk', '+94 81 222 8901', 'active', 'enterprise')
 ON CONFLICT (id) DO NOTHING;
+
+-- 3.1 Helper Functions for Strict Multi-Tenant Row Level Security (RLS)
+CREATE OR REPLACE FUNCTION auth.school_id() 
+RETURNS TEXT AS $$
+  SELECT COALESCE(
+    (current_setting('request.jwt.claims', true)::jsonb -> 'app_metadata' ->> 'school_id'),
+    (current_setting('request.jwt.claims', true)::jsonb -> 'user_metadata' ->> 'school_id'),
+    'campus-kandy-1934'
+  );
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION auth.is_ceyteq_super_admin() 
+RETURNS BOOLEAN AS $$
+  SELECT COALESCE(
+    (current_setting('request.jwt.claims', true)::jsonb -> 'app_metadata' ->> 'role') = 'super_admin',
+    FALSE
+  );
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 -- 4. User Profiles Table (Synced with Supabase auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-colombo-2026',
+  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-kandy-1934',
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL,
@@ -266,11 +292,20 @@ CREATE POLICY "Anyone can read tenant details"
   USING (true);
 
 -- RLS: PROFILES
-DROP POLICY IF EXISTS "Master admins can do all on profiles" ON public.profiles;
-CREATE POLICY "Master admins can do all on profiles"
+DROP POLICY IF EXISTS "Ceyteq super admins can do all on profiles" ON public.profiles;
+CREATE POLICY "Ceyteq super admins can do all on profiles"
   ON public.profiles FOR ALL
   TO authenticated
-  USING (public.current_user_role() = 'master_admin');
+  USING (public.current_user_role() = 'super_admin');
+
+DROP POLICY IF EXISTS "School Master admins manage own school profiles" ON public.profiles;
+CREATE POLICY "School Master admins manage own school profiles"
+  ON public.profiles FOR ALL
+  TO authenticated
+  USING (
+    public.current_user_role() = 'master_admin'
+    AND tenant_id = public.current_user_tenant()
+  );
 
 DROP POLICY IF EXISTS "Normal admins manage campus profiles" ON public.profiles;
 CREATE POLICY "Normal admins manage campus profiles"

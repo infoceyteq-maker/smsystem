@@ -18,9 +18,11 @@ export const Footer: React.FC<FooterProps> = ({
     <footer className="w-full px-4 sm:px-8 py-4 border-t border-gray-200 bg-white/90 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 select-none z-40">
       {/* Left copyright notice */}
       <div className="flex items-center gap-2">
-        <span className="font-medium text-gray-600">© 2026 Aster College · School Operations ERP</span>
+        <span className="font-semibold text-gray-700">© 2026 Sri Sumangala College Kandy · School Operations ERP</span>
         <span className="hidden sm:inline text-gray-300">|</span>
-        <span className="hidden sm:inline text-gray-400">Powered by Ceyteq Solutions</span>
+        <span className="hidden sm:inline text-amber-700 font-medium">Estd - 1934</span>
+        <span className="hidden sm:inline text-gray-300">|</span>
+        <span className="hidden sm:inline text-gray-400">Ceyteq Solutions</span>
       </div>
 
       {/* Center Figma presentation slide navigator pill (< 8 / 18 >) */}

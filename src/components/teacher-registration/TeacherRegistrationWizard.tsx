@@ -22,11 +22,11 @@ const INITIAL_TEACHER_FORM: TeacherRegistrationFormData = {
   firstName: 'Amaya',
   lastName: 'Fernando',
   nic: '198854203190',
-  address: 'No. 42, Galle Road, Colombo 03',
+  address: 'No. 42, Peradeniya Road, Kandy',
   dob: '14 August 1988',
   gender: 'Female',
   phone: '+94 77 456 7890',
-  email: 'amaya.fernando@astercollege.edu',
+  email: 'amaya.fernando@srisumangala.edu.lk',
 
   // Step 2: Professional Details
   designation: 'Senior Faculty Lecturer',

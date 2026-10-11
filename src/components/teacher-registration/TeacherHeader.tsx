@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowLeft, MoreHorizontal, GraduationCap, Check } from 'lucide-react';
+import { ArrowLeft, MoreHorizontal, Check } from 'lucide-react';
+import { SchoolLogo } from '../common/SchoolLogo';
 
 interface TeacherHeaderProps {
   currentStep: 1 | 2 | 3;
@@ -42,12 +43,15 @@ export const TeacherHeader: React.FC<TeacherHeaderProps> = ({
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#007AFF] flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-            <GraduationCap className="w-4 h-4" />
+          <SchoolLogo size="sm" interactive={false} />
+          <div className="flex flex-col">
+            <span className="text-sm font-bold tracking-tight text-gray-900 leading-tight">
+              Sri Sumangala College
+            </span>
+            <span className="text-[9px] font-semibold text-[#0B3C96]">
+              KANDY · ESTD - 1934
+            </span>
           </div>
-          <span className="text-sm font-bold tracking-tight text-gray-900">
-            Aster College
-          </span>
         </div>
 
         <button

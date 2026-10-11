@@ -4,7 +4,7 @@
  * and handles teacher photo avatar upload to Supabase Storage
  */
 
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, getActiveSchool } from '../lib/supabase';
 import { 
   TeacherRegistrationFormData, 
   TeacherRegistrationResult 
@@ -69,7 +69,7 @@ export async function submitTeacherRegistration(
         first_appointment_date: formData.firstAppointmentDate,
         current_appointment_date: formData.currentAppointmentDate,
         status: 'pending',
-        tenant_id: 'campus-colombo-2026',
+        tenant_id: getActiveSchool().id,
       });
 
       if (error) {

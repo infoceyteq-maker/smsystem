@@ -1,11 +1,14 @@
 import React from 'react';
-import { GraduationCap, Database, Sliders, Laptop, Tablet, Smartphone } from 'lucide-react';
+import { Database, Sliders, Laptop, Tablet, Smartphone } from 'lucide-react';
 import { CampusTenant } from '../types/erp';
+import { SchoolLogo } from './common/SchoolLogo';
+import { TenantSwitcher } from './common/TenantSwitcher';
 
 interface HeaderProps {
   campus: CampusTenant;
   onOpenSupabaseDocs: () => void;
   onOpenQuickRoles: () => void;
+  onOpenSuperAdmin?: () => void;
   viewportMode: 'desktop' | 'tablet' | 'mobile';
   onSetViewportMode: (mode: 'desktop' | 'tablet' | 'mobile') => void;
 }
@@ -14,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   campus,
   onOpenSupabaseDocs,
   onOpenQuickRoles,
+  onOpenSuperAdmin,
   viewportMode,
   onSetViewportMode,
 }) => {
@@ -21,15 +25,18 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="w-full flex items-center justify-between px-4 sm:px-8 py-4 border-b border-gray-200/80 bg-white/85 backdrop-blur-md z-40 select-none shadow-xs sticky top-0">
       {/* Brand Identity (Left) */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#007AFF] flex items-center justify-center shadow-md shadow-blue-500/20 ring-1 ring-blue-600/20">
-          <GraduationCap className="w-5 h-5 text-white" strokeWidth={2.2} />
-        </div>
+        <SchoolLogo size="md" interactive={true} />
         <div className="flex flex-col text-left">
-          <span className="text-gray-900 font-bold text-sm tracking-tight leading-tight">
-            Aster College
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-gray-900 font-bold text-sm tracking-tight leading-tight">
+              Sri Sumangala College
+            </span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-[#0B3C96] border border-blue-200">
+              KANDY
+            </span>
+          </div>
           <span className="text-gray-500 text-[10px] tracking-wider font-semibold uppercase leading-tight mt-0.5">
-            SCHOOL OPERATIONS · {campus?.code || 'COL-2026'}
+            SCHOOL OPERATIONS · {campus?.code || 'SSCK-1934'}
           </span>
         </div>
       </div>
@@ -76,6 +83,19 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Utility Quick Pickers (Right) */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Tenant Switcher dropdown */}
+        <TenantSwitcher onOpenSuperAdmin={onOpenSuperAdmin} />
+
+        {onOpenSuperAdmin && (
+          <button
+            onClick={onOpenSuperAdmin}
+            className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 transition shadow-xs cursor-pointer"
+            title="Ceyteq Multi-Tenant Super Admin Control Plane"
+          >
+            <span>Super Admin</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenQuickRoles}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 hover:text-gray-900 shadow-xs transition"

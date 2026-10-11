@@ -16,8 +16,11 @@ import { MasterAdminDashboard } from './components/dashboard/MasterAdminDashboar
 import { InvitationModal } from './components/dashboard/InvitationModal';
 import { StudentRegistrationWizard } from './components/registration/StudentRegistrationWizard';
 import { TeacherRegistrationWizard } from './components/teacher-registration/TeacherRegistrationWizard';
+import { SuperAdminDashboard } from './components/super-admin/SuperAdminDashboard';
+import { LogoUploadModal } from './components/common/LogoUploadModal';
 import { DEFAULT_CAMPUS, DEMO_ERP_ACCOUNTS } from './lib/supabase';
 import { UserProfile } from './types/erp';
+import { Upload, ShieldCheck } from 'lucide-react';
 
 export default function App() {
   // Navigation / Slide state (From Figma 8 / 18, 9 / 18, etc.)
@@ -33,6 +36,7 @@ export default function App() {
   const [isRolePickerOpen, setIsRolePickerOpen] = useState(false);
   const [isSupabaseDocsOpen, setIsSupabaseDocsOpen] = useState(false);
   const [isInvitationModalOpen, setIsInvitationModalOpen] = useState(false);
+  const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
 
   // Authenticated state
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -43,7 +47,7 @@ export default function App() {
 
   // Explicit Screen mode switcher for quick reviewer navigation
   const [viewingScreen, setViewingScreen] = useState<
-    'signin' | 'master_dashboard' | 'approvals' | 'attendance' | 'payments' | 'registration' | 'teacher_registration'
+    'super_admin' | 'signin' | 'master_dashboard' | 'approvals' | 'attendance' | 'payments' | 'registration' | 'teacher_registration'
   >('signin');
 
   // Slide navigation handlers
@@ -69,7 +73,9 @@ export default function App() {
 
   const handleSignInSuccess = (user: UserProfile) => {
     setCurrentUser(user);
-    if (user.role === 'master_admin') {
+    if (user.role === 'super_admin') {
+      setViewingScreen('super_admin');
+    } else if (user.role === 'master_admin') {
       setViewingScreen('master_dashboard');
       setCurrentSlide(9);
     } else {
@@ -120,6 +126,19 @@ export default function App() {
           <span className="text-gray-500 hidden md:inline shrink-0 font-bold uppercase tracking-wider text-[11px]">ERP Modules:</span>
           
           <div className="flex items-center bg-gray-100 rounded-xl p-1 border border-gray-200 gap-1 shrink-0 overflow-x-auto">
+            <button
+              onClick={() => {
+                setViewingScreen('super_admin');
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                viewingScreen === 'super_admin'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-indigo-800 hover:text-indigo-950 bg-indigo-50/70 hover:bg-indigo-100'
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
+              <span>0. Ceyteq Super Admin</span>
+            </button>
             <button
               onClick={() => {
                 setViewingScreen('signin');
@@ -227,6 +246,14 @@ export default function App() {
 
         <div className="flex items-center gap-2 shrink-0">
           <button
+            onClick={() => setIsLogoModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-50 text-[#0B3C96] border border-blue-200 hover:bg-blue-100 transition text-[11px] font-bold whitespace-nowrap shadow-xs cursor-pointer"
+            title="Upload or Change Official School Logo"
+          >
+            <Upload className="w-3.5 h-3.5 text-[#0B3C96]" />
+            <span>School Logo</span>
+          </button>
+          <button
             onClick={() => setIsSupabaseDocsOpen(true)}
             className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition text-[11px] font-bold whitespace-nowrap shadow-xs cursor-pointer"
           >
@@ -235,7 +262,24 @@ export default function App() {
         </div>
       </div>
 
-      {viewingScreen === 'teacher_registration' ? (
+      {viewingScreen === 'super_admin' ? (
+        // Ceyteq Super Admin Multi-Tenant Governance View
+        <div className="w-full flex-1 flex flex-col justify-between">
+          <SuperAdminDashboard
+            onOpenSchoolPortal={(schoolId) => {
+              setViewingScreen('master_dashboard');
+              setCurrentSlide(9);
+            }}
+            onSignOut={handleSignOut}
+          />
+          <Footer
+            currentSlide={currentSlide}
+            totalSlides={totalSlides}
+            onPrevSlide={handlePrevSlide}
+            onNextSlide={handleNextSlide}
+          />
+        </div>
+      ) : viewingScreen === 'teacher_registration' ? (
         // Teacher Registration 3-Step Wizard View
         <div className="w-full flex-1 flex flex-col justify-between">
           <TeacherRegistrationWizard 
@@ -277,6 +321,7 @@ export default function App() {
               setViewingScreen('teacher_registration');
               setCurrentSlide(11);
             }}
+            onOpenSuperAdmin={() => setViewingScreen('super_admin')}
           />
         </div>
       ) : currentUser ? (
@@ -286,6 +331,7 @@ export default function App() {
             campus={DEFAULT_CAMPUS}
             onOpenSupabaseDocs={() => setIsSupabaseDocsOpen(true)}
             onOpenQuickRoles={() => setIsRolePickerOpen(true)}
+            onOpenSuperAdmin={() => setViewingScreen('super_admin')}
             viewportMode={viewportMode}
             onSetViewportMode={setViewportMode}
           />
@@ -308,6 +354,7 @@ export default function App() {
             campus={DEFAULT_CAMPUS}
             onOpenSupabaseDocs={() => setIsSupabaseDocsOpen(true)}
             onOpenQuickRoles={() => setIsRolePickerOpen(true)}
+            onOpenSuperAdmin={() => setViewingScreen('super_admin')}
             viewportMode={viewportMode}
             onSetViewportMode={setViewportMode}
           />
@@ -369,6 +416,11 @@ export default function App() {
       <InvitationModal
         isOpen={isInvitationModalOpen}
         onClose={() => setIsInvitationModalOpen(false)}
+      />
+
+      <LogoUploadModal
+        isOpen={isLogoModalOpen}
+        onClose={() => setIsLogoModalOpen(false)}
       />
     </div>
   );

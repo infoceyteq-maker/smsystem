@@ -82,7 +82,7 @@ export const Step1Personal: React.FC<Step1PersonalProps> = ({
             Teacher ID Photo
           </h3>
           <p className="text-xs text-gray-500 mt-0.5 leading-relaxed font-normal">
-            Upload a professional, passport-style front portrait for the official Colombo Campus staff directory and digital ID badge.
+            Upload a professional, passport-style front portrait for the official Sri Sumangala College Kandy staff directory and digital ID badge.
           </p>
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-2.5">
             <button
@@ -214,7 +214,7 @@ export const Step1Personal: React.FC<Step1PersonalProps> = ({
               type="text"
               value={data.address}
               onChange={(e) => onChange({ address: e.target.value })}
-              placeholder="No. 42, Galle Road, Colombo 03"
+              placeholder="No. 42, Peradeniya Road, Kandy"
               required
               className="w-full bg-transparent text-gray-900 text-sm outline-none placeholder:text-gray-400 font-normal"
             />

@@ -11,8 +11,10 @@ import {
   Settings, 
   Plus, 
   ChevronDown, 
-  X 
+  X,
 } from 'lucide-react';
+import { SchoolLogo } from '../common/SchoolLogo';
+import { TenantSwitcher } from '../common/TenantSwitcher';
 
 interface SidebarProps {
   activeTab: string;
@@ -22,6 +24,7 @@ interface SidebarProps {
   onOpenApprovals: () => void;
   onOpenRegistration?: () => void;
   onOpenTeacherRegistration?: () => void;
+  onOpenSuperAdmin?: () => void;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
@@ -34,6 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenApprovals,
   onOpenRegistration,
   onOpenTeacherRegistration,
+  onOpenSuperAdmin,
   isMobileOpen = false,
   onCloseMobile,
 }) => {
@@ -71,16 +75,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex flex-col space-y-5 overflow-y-auto pr-1">
           {/* Header Brand */}
           <div className="flex items-center justify-between pt-1">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#007AFF] flex items-center justify-center shadow-md shadow-blue-500/20">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
+            <div className="flex items-center gap-2.5">
+              <SchoolLogo size="md" interactive={true} />
               <div>
                 <h1 className="text-sm font-bold text-gray-900 tracking-tight leading-none">
-                  Aster College
+                  Sri Sumangala College
                 </h1>
-                <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider mt-1">
-                  SCHOOL OPERATIONS
+                <p className="text-[10px] uppercase font-semibold text-amber-700 tracking-wider mt-1">
+                  KANDY · ESTD - 1934
                 </p>
               </div>
             </div>
@@ -96,18 +98,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
 
-          {/* Campus Selector Pill Card */}
-          <div className="bg-gray-50 rounded-2xl p-3 border border-gray-200 flex items-center justify-between cursor-pointer hover:border-gray-300 transition shadow-xs">
-            <div>
-              <p className="text-xs font-bold text-gray-900 leading-tight">
-                Colombo Campus
-              </p>
-              <p className="text-[11px] text-gray-500 mt-0.5 leading-tight font-medium">
-                Academic Year 2026
-              </p>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-          </div>
+          {/* Multi-School Tenant Switcher */}
+          <TenantSwitcher variant="sidebar" onOpenSuperAdmin={onOpenSuperAdmin} />
 
           {/* Navigation Links */}
           <nav className="space-y-1">

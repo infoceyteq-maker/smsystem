@@ -219,7 +219,7 @@ export const Step3Academic: React.FC<Step3AcademicProps> = ({
           </div>
 
           <div className="p-3 bg-gray-50 border border-gray-100 rounded-xl text-[11px] text-gray-500 leading-relaxed mt-4">
-            Submission routes profile to Aster College Master Admin for verification before admission card issuance.
+            Submission routes profile to Sri Sumangala College Master Admin for verification before admission card issuance.
           </div>
         </div>
       </div>

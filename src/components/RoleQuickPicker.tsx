@@ -17,17 +17,23 @@ export const RoleQuickPicker: React.FC<RoleQuickPickerProps> = ({
   if (!isOpen) return null;
 
   const roleMeta: Record<UserRole, { badge: string; color: string; icon: React.ReactNode; desc: string }> = {
+    super_admin: {
+      badge: 'Ceyteq Super Admin',
+      color: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      icon: <ShieldCheck className="w-5 h-5 text-indigo-600" />,
+      desc: 'Platform owner governance: register schools, approve tenants & RLS',
+    },
     master_admin: {
-      badge: 'Master Admin',
+      badge: 'School Master Admin',
       color: 'bg-purple-50 text-purple-700 border-purple-200',
       icon: <ShieldCheck className="w-5 h-5 text-purple-600" />,
-      desc: 'Full multi-campus governance, all databases, finances & staff',
+      desc: 'School governance: manage own students, faculty, approvals & fees',
     },
     normal_admin: {
       badge: 'Normal Admin',
       color: 'bg-blue-50 text-blue-700 border-blue-200',
       icon: <School className="w-5 h-5 text-blue-600" />,
-      desc: 'Colombo campus administration, student admissions, scheduling',
+      desc: 'Sri Sumangala College administration, admissions, scheduling',
     },
     teacher: {
       badge: 'Teacher / Faculty',

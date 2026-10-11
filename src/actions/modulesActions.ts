@@ -136,7 +136,7 @@ export async function processStudentPayment(
     remainingBalance: remaining,
     paidAt,
     cashierName: 'Nadeesha Perera (Master Admin)',
-    tenantName: 'Aster College · Colombo Campus',
+    tenantName: 'Sri Sumangala College · Kandy',
   };
 
   return {

@@ -3,7 +3,7 @@
  * Inserts combined multi-step payload into Supabase PostgreSQL (students & parents)
  */
 
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, getActiveSchool } from '../lib/supabase';
 import { StudentRegistrationFormData, StudentRegistrationResult } from '../types/studentRegistration';
 
 export async function submitStudentRegistration(
@@ -32,7 +32,7 @@ export async function submitStudentRegistration(
           guardian_name: formData.fatherName,
           guardian_phone: formData.fatherPhone,
           status: 'pending',
-          tenant_id: 'campus-colombo-2026',
+          tenant_id: getActiveSchool().id,
         })
         .select()
         .single();
@@ -45,7 +45,7 @@ export async function submitStudentRegistration(
       if (studentRecord?.id) {
         await supabase.from('parents').insert({
           student_id: studentRecord.id,
-          tenant_id: 'campus-colombo-2026',
+          tenant_id: getActiveSchool().id,
           father_name: formData.fatherName,
           father_nic: formData.fatherNic,
           father_phone: formData.fatherPhone,

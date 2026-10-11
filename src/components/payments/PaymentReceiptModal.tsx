@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, CheckCircle2, Printer, Download, Share2, ShieldCheck, GraduationCap } from 'lucide-react';
+import { X, CheckCircle2, Printer, Download, Share2, ShieldCheck } from 'lucide-react';
 import { PaymentReceipt } from '../../types/modules';
+import { SchoolLogo } from '../common/SchoolLogo';
 
 interface PaymentReceiptModalProps {
   receipt: PaymentReceipt | null;
@@ -24,15 +25,13 @@ export const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
         </button>
 
         {/* Top Brand & Title */}
-        <div className="text-center pb-5 border-b border-gray-100">
-          <div className="w-12 h-12 rounded-2xl bg-[#007AFF] text-white flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-500/25">
-            <GraduationCap className="w-6 h-6" />
-          </div>
+        <div className="text-center pb-5 border-b border-gray-100 flex flex-col items-center">
+          <SchoolLogo size="xl" className="mb-2" />
           <h2 className="text-lg font-bold text-gray-900 tracking-tight">
             Official Payment Receipt
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">
-            {receipt.tenantName} · Finance Department
+          <p className="text-xs text-gray-500 mt-0.5 font-medium">
+            Sri Sumangala College Kandy · Finance & Bursary
           </p>
           <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-[#34C759] border border-emerald-200 font-mono shadow-xs">
             <CheckCircle2 className="w-3.5 h-3.5" />

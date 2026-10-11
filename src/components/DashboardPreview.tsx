@@ -101,7 +101,7 @@ export const DashboardPreview: React.FC<DashboardPreviewProps> = ({
             Campus Context
           </h3>
           <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            Scoped to Colombo Campus (COL-2026). All data isolated by multi-tenant schema.
+            Scoped to Sri Sumangala College Kandy (SSCK-1934). All data isolated by multi-tenant schema.
           </p>
         </div>
 
