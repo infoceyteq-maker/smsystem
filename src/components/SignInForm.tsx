@@ -53,7 +53,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
             particleCount: 45,
             spread: 60,
             origin: { y: 0.65 },
-            colors: ['#0A84FF', '#30D158', '#FFFFFF'],
+            colors: ['#007AFF', '#34C759', '#111827'],
           });
         } catch (_) {}
 
@@ -69,15 +69,15 @@ export const SignInForm: React.FC<SignInFormProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[420px] mx-auto px-4 py-6 sm:py-8 flex flex-col items-center select-none animate-in fade-in duration-300">
-      {/* 1. Squircle Graduation Cap Badge (Pixel-perfect match to screenshot) */}
-      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-[#091E36]/90 border border-[#0A84FF]/30 flex items-center justify-center mb-6 shadow-xl shadow-blue-950/30 ring-1 ring-[#0A84FF]/20 group transition hover:scale-105">
+    <div className="w-full max-w-[420px] mx-auto px-4 py-8 sm:py-10 flex flex-col items-center select-none animate-in fade-in duration-300">
+      {/* 1. Squircle Graduation Cap Badge */}
+      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-blue-50 border border-blue-200/80 flex items-center justify-center mb-6 shadow-md shadow-blue-500/10 ring-1 ring-blue-500/20 group transition hover:scale-105">
         <svg
-          className="w-10 h-10 sm:w-11 sm:h-11 text-[#0A84FF] transition"
+          className="w-10 h-10 sm:w-11 sm:h-11 text-[#007AFF] transition"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.6"
+          strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
@@ -89,23 +89,23 @@ export const SignInForm: React.FC<SignInFormProps> = ({
       </div>
 
       {/* 2. Heading & Subtitle */}
-      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white text-center">
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 text-center">
         Sign In to ERP
       </h1>
-      <p className="text-xs sm:text-sm text-[#8E8E93] text-center mt-1.5 mb-7">
+      <p className="text-xs sm:text-sm text-gray-500 text-center mt-1.5 mb-7">
         One secure home for your school journey.
       </p>
 
       {/* Error Callout Banner if authentication failed */}
       {errorMessage && (
-        <div className="w-full mb-4 p-3.5 bg-red-950/40 border border-[#FF453A]/40 rounded-xl flex items-start gap-2.5 text-xs text-red-200 animate-in shake duration-200">
-          <AlertCircle className="w-4 h-4 text-[#FF453A] shrink-0 mt-0.5" />
-          <div className="flex-1">
+        <div className="w-full mb-4 p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-800 animate-in shake duration-200 shadow-xs">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div className="flex-1 font-medium">
             <span>{errorMessage}</span>
           </div>
           <button
             onClick={() => setErrorMessage(null)}
-            className="text-red-400 hover:text-white"
+            className="text-red-600 hover:text-red-900"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -113,19 +113,19 @@ export const SignInForm: React.FC<SignInFormProps> = ({
       )}
 
       {/* 3. Form Container */}
-      <form onSubmit={handleSubmit} className="w-full space-y-3.5">
+      <form onSubmit={handleSubmit} className="w-full space-y-4">
         {/* Field 1: Username / Admission No */}
         <div
-          className={`relative w-full bg-[#1C1C1E] rounded-xl px-4 pt-2.5 pb-2.5 transition-all duration-200 ${
+          className={`relative w-full bg-white rounded-xl px-4 pt-2.5 pb-2.5 transition-all duration-200 shadow-xs ${
             isFocusedIdentifier
-              ? 'border border-[#0A84FF] shadow-[0_0_15px_rgba(10,132,255,0.15)] ring-1 ring-[#0A84FF]/30'
-              : 'border border-white/5 hover:border-white/10'
+              ? 'border border-[#007AFF] shadow-sm ring-2 ring-blue-500/10'
+              : 'border border-gray-200 hover:border-gray-300'
           }`}
         >
           <label
             htmlFor="identifier-input"
             className={`text-xs block font-medium transition-colors ${
-              isFocusedIdentifier ? 'text-[#0A84FF]' : 'text-[#8E8E93]'
+              isFocusedIdentifier ? 'text-[#007AFF]' : 'text-gray-500'
             }`}
           >
             Username/Admission No
@@ -144,13 +144,13 @@ export const SignInForm: React.FC<SignInFormProps> = ({
               placeholder="e.g. master.admin"
               autoComplete="username"
               required
-              className="w-full bg-transparent text-white text-sm sm:text-base outline-none placeholder:text-zinc-600 font-normal"
+              className="w-full bg-transparent text-gray-900 text-sm sm:text-base outline-none placeholder:text-gray-400 font-normal"
             />
             {identifier && (
               <button
                 type="button"
                 onClick={() => setIdentifier('')}
-                className="text-zinc-600 hover:text-zinc-300 p-0.5 transition"
+                className="text-gray-400 hover:text-gray-600 p-0.5 transition"
                 title="Clear username"
               >
                 <X className="w-3.5 h-3.5" />
@@ -161,16 +161,16 @@ export const SignInForm: React.FC<SignInFormProps> = ({
 
         {/* Field 2: Password */}
         <div
-          className={`relative w-full bg-[#1C1C1E] rounded-xl px-4 pt-2.5 pb-2.5 transition-all duration-200 ${
+          className={`relative w-full bg-white rounded-xl px-4 pt-2.5 pb-2.5 transition-all duration-200 shadow-xs ${
             isFocusedPassword
-              ? 'border border-[#0A84FF] shadow-[0_0_15px_rgba(10,132,255,0.15)] ring-1 ring-[#0A84FF]/30'
-              : 'border border-white/5 hover:border-white/10'
+              ? 'border border-[#007AFF] shadow-sm ring-2 ring-blue-500/10'
+              : 'border border-gray-200 hover:border-gray-300'
           }`}
         >
           <label
             htmlFor="password-input"
             className={`text-xs block transition-colors ${
-              isFocusedPassword ? 'text-[#0A84FF] font-medium' : 'text-[#8E8E93]'
+              isFocusedPassword ? 'text-[#007AFF] font-medium' : 'text-gray-500'
             }`}
           >
             Password
@@ -189,12 +189,12 @@ export const SignInForm: React.FC<SignInFormProps> = ({
               placeholder="•••••••••••••"
               autoComplete="current-password"
               required
-              className="w-full bg-transparent text-white text-sm sm:text-base outline-none placeholder:text-zinc-600 font-normal tracking-wide"
+              className="w-full bg-transparent text-gray-900 text-sm sm:text-base outline-none placeholder:text-gray-400 font-normal tracking-wide"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-[#8E8E93] hover:text-white p-1 transition"
+              className="text-gray-400 hover:text-gray-600 p-1 transition"
               title={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -211,23 +211,23 @@ export const SignInForm: React.FC<SignInFormProps> = ({
           <button
             type="button"
             onClick={onOpenForgotPassword}
-            className="text-xs text-[#0A84FF] hover:underline font-normal transition"
+            className="text-xs text-[#007AFF] hover:underline font-medium transition"
           >
             Forgot password?
           </button>
         </div>
 
-        {/* 4. Face ID / Touch ID Biometric Section (Exact glyph and text from screenshot) */}
-        <div className="pt-3 pb-2 flex flex-col items-center justify-center">
+        {/* 4. Face ID / Touch ID Biometric Section */}
+        <div className="pt-2 pb-1 flex flex-col items-center justify-center">
           <button
             type="button"
             onClick={onOpenBiometrics}
-            className="group flex flex-col items-center gap-1.5 focus:outline-none"
+            className="group flex flex-col items-center gap-1.5 focus:outline-none p-2 rounded-xl hover:bg-gray-100/70 transition"
           >
-            <div className="w-9 h-9 flex items-center justify-center text-[#0A84FF] group-hover:scale-110 transition duration-200">
+            <div className="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[#007AFF] group-hover:scale-105 transition duration-200">
               {/* Apple Face ID Viewfinder Glyph */}
               <svg
-                className="w-7 h-7 text-[#0A84FF]"
+                className="w-5 h-5 text-[#007AFF]"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -249,7 +249,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
                 <path d="M9 16.5c1 1 5 1 6 0" />
               </svg>
             </div>
-            <span className="text-xs text-[#8E8E93] group-hover:text-white transition">
+            <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition">
               Sign in with Face ID or Touch ID
             </span>
           </button>
@@ -259,7 +259,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 sm:py-4 px-4 bg-[#0A84FF] hover:bg-[#0077ED] active:bg-[#0066CC] disabled:opacity-60 text-white font-semibold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-lg shadow-blue-500/25 active:scale-[0.99] transition duration-150 flex items-center justify-center gap-2"
+          className="w-full py-3.5 sm:py-4 px-4 bg-[#007AFF] hover:bg-[#0062CC] active:bg-[#0052A3] disabled:opacity-60 text-white font-semibold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md shadow-blue-500/20 active:scale-[0.99] transition duration-150 flex items-center justify-center gap-2 cursor-pointer"
         >
           {isLoading ? (
             <>
@@ -272,8 +272,8 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         </button>
 
         {/* 6. Explanatory Sub-text */}
-        <p className="text-[11px] sm:text-xs text-[#8E8E93] text-center max-w-[340px] mx-auto leading-relaxed pt-2">
-          Master Admin, staff and students use the same sign-in. Your account determines your access.
+        <p className="text-[11px] sm:text-xs text-gray-500 text-center max-w-[340px] mx-auto leading-relaxed pt-2">
+          Master Admin, staff, and students use the same sign-in. Your role determines your workspace.
         </p>
       </form>
     </div>

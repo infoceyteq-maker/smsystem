@@ -21,14 +21,20 @@ export const SupabaseDocsModal: React.FC<SupabaseDocsModalProps> = ({
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const sqlCode = `-- Enable UUID Extension
+  const sqlCode = `-- Enable Required Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- Define Enum for Roles
-CREATE TYPE user_role_enum AS ENUM ('master_admin', 'normal_admin', 'teacher', 'student', 'parent');
+-- Define Enum for Roles (Idempotent)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
+    CREATE TYPE user_role_enum AS ENUM ('master_admin', 'normal_admin', 'teacher', 'student', 'parent');
+  END IF;
+END $$;
 
 -- Tenants Table (Multi-Campus SaaS Architecture)
-CREATE TABLE public.tenants (
+CREATE TABLE IF NOT EXISTS public.tenants (
   id TEXT PRIMARY KEY DEFAULT 'campus-colombo-2026',
   name TEXT NOT NULL,
   code TEXT NOT NULL UNIQUE,
@@ -37,193 +43,159 @@ CREATE TABLE public.tenants (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Seed Colombo Campus
+INSERT INTO public.tenants (id, name, code, academic_year, location)
+VALUES ('campus-colombo-2026', 'Aster College - Colombo Campus', 'COL-2026', 2026, 'Colombo, Sri Lanka')
+ON CONFLICT (id) DO NOTHING;
+
 -- Profiles Table (Synced with Supabase auth.users)
-CREATE TABLE public.profiles (
+CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-colombo-2026',
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL,
   role user_role_enum NOT NULL DEFAULT 'student',
   admission_no TEXT UNIQUE,
   department TEXT,
+  designation TEXT,
   grade_level TEXT,
+  phone TEXT,
+  avatar_url TEXT,
+  is_biometric_enrolled BOOLEAN DEFAULT FALSE,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'pending')),
   last_sign_in_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Students Table
+CREATE TABLE IF NOT EXISTS public.students (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  tenant_id TEXT NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE DEFAULT 'campus-colombo-2026',
+  admission_no TEXT UNIQUE NOT NULL,
+  full_name TEXT NOT NULL,
+  date_of_birth DATE,
+  age_at_admission INT,
+  grade_level TEXT NOT NULL,
+  class_section TEXT NOT NULL,
+  ol_index_no TEXT,
+  stream TEXT,
+  sports_interest BOOLEAN DEFAULT FALSE,
+  societies_interest BOOLEAN DEFAULT FALSE,
+  guardian_name TEXT,
+  guardian_phone TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'enrolled', 'withdrawn', 'graduated')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Row Level Security (RLS) Policies
+-- Enable Row Level Security (RLS) on all tables
+ALTER TABLE public.tenants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.attendance ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staff ENABLE ROW LEVEL SECURITY;`;
 
-CREATE POLICY "Master admin has full access"
-  ON public.profiles FOR ALL TO authenticated
-  USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'master_admin');
+  const envCode = `# Aster College ERP - Supabase Credentials
+# Add these in your Vercel / Next.js / Vite environment settings:
 
-CREATE POLICY "Normal admin views campus staff & students"
-  ON public.profiles FOR ALL TO authenticated
-  USING (
-    (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'normal_admin'
-    AND tenant_id = (SELECT tenant_id FROM public.profiles WHERE id = auth.uid())
-  );
-
-CREATE POLICY "Users view own profile"
-  ON public.profiles FOR SELECT TO authenticated
-  USING (id = auth.uid());`;
-
-  const serverActionCode = `// app/actions/authActions.ts
-'use server'
-
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-
-export async function signInAction(formData: FormData) {
-  const cookieStore = cookies()
-  const identifier = formData.get('identifier') as string
-  const password = formData.get('password') as string
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name) { return cookieStore.get(name)?.value },
-        set(name, value, options) { cookieStore.set({ name, value, ...options }) },
-        remove(name, options) { cookieStore.set({ name, value: '', ...options }) },
-      },
-    }
-  )
-
-  // 1. Resolve username/admission_no to auth email
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('email, role')
-    .or(\`username.eq.\${identifier},admission_no.eq.\${identifier.toUpperCase()}\`)
-    .single()
-
-  const authEmail = profile?.email || identifier
-
-  // 2. Authenticate with Supabase JWT
-  const { error } = await supabase.auth.signInWithPassword({
-    email: authEmail,
-    password,
-  })
-
-  if (error) {
-    return { error: error.message }
-  }
-
-  // 3. Route according to verified Role
-  if (profile?.role === 'master_admin') redirect('/dashboard/master')
-  if (profile?.role === 'teacher') redirect('/dashboard/faculty')
-  if (profile?.role === 'student') redirect('/portal/student')
-  redirect('/dashboard')
-}`;
-
-  const envGuide = `# .env.local (Configured in Vercel Project Settings)
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsIn..."
-
-# Optional Service Role for Admin backend operations
-SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOi..."
-NEXT_PUBLIC_CAMPUS_ID="campus-colombo-2026"`;
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl bg-[#1C1C1E] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col max-h-[85vh]">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <Database className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-white tracking-tight">
-                Supabase & Next.js 14 Integration Blueprint
-              </h3>
-              <p className="text-[11px] text-[#8E8E93]">
-                PostgreSQL Tables, Strict RLS Policies, and App Router Server Actions
-              </p>
-            </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-3xl bg-white border border-gray-200 rounded-3xl p-6 sm:p-7 shadow-xl flex flex-col max-h-[90vh]">
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-1 rounded-full transition"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+            <Database className="w-4 h-4" />
           </div>
-          <button
-            onClick={onClose}
-            className="text-[#8E8E93] hover:text-white p-1 rounded-full transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+            Supabase PostgreSQL Integration
+          </span>
         </div>
 
-        {/* Tab Controls */}
-        <div className="flex items-center gap-2 pt-4 pb-3">
+        <h3 className="text-xl font-bold text-gray-900 tracking-tight">
+          SQL Editor Code & RLS Architecture
+        </h3>
+        <p className="text-xs text-gray-500 mt-0.5 mb-4">
+          Ready to run in Supabase Dashboard → SQL Editor. Contains schemas, functions, triggers, and Row Level Security.
+        </p>
+
+        {/* Tab switchers */}
+        <div className="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl mb-4 border border-gray-200">
           <button
             onClick={() => setActiveTab('sql')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
               activeTab === 'sql'
-                ? 'bg-[#0A84FF] text-white shadow-sm'
-                : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                ? 'bg-white text-gray-900 shadow-xs'
+                : 'text-gray-500 hover:text-gray-900'
             }`}
           >
-            <Database className="w-3.5 h-3.5" />
-            <span>PostgreSQL & RLS Schema</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('actions')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 ${
-              activeTab === 'actions'
-                ? 'bg-[#0A84FF] text-white shadow-sm'
-                : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
-            }`}
-          >
-            <Server className="w-3.5 h-3.5" />
-            <span>Server Actions (`actions.ts`)</span>
+            <FileCode2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Full SQL Schema (DDL + RLS)</span>
           </button>
           <button
             onClick={() => setActiveTab('env')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
               activeTab === 'env'
-                ? 'bg-[#0A84FF] text-white shadow-sm'
-                : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                ? 'bg-white text-gray-900 shadow-xs'
+                : 'text-gray-500 hover:text-gray-900'
             }`}
           >
-            <FileCode2 className="w-3.5 h-3.5" />
-            <span>Environment Variables</span>
+            <Server className="w-3.5 h-3.5 text-[#007AFF]" />
+            <span>Environment Config (.env)</span>
           </button>
         </div>
 
-        {/* Code Content */}
-        <div className="relative flex-1 overflow-y-auto bg-black/50 border border-white/5 rounded-2xl p-4 font-mono text-xs text-zinc-300">
-          <button
-            onClick={() => {
-              const code =
-                activeTab === 'sql'
-                  ? sqlCode
-                  : activeTab === 'actions'
-                  ? serverActionCode
-                  : envGuide;
-              copyToClipboard(code, activeTab);
-            }}
-            className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2C2C2E] hover:bg-[#3A3A3C] text-xs font-sans text-white border border-white/10 transition"
-          >
-            {copied === activeTab ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-[#30D158]" />
-                <span className="text-[#30D158]">Copied</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                <span>Copy Code</span>
-              </>
-            )}
-          </button>
+        {/* Code Content Container */}
+        <div className="relative flex-1 overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 flex flex-col">
+          <div className="flex items-center justify-between px-4 py-2.5 bg-gray-950/80 border-b border-gray-800 text-xs text-gray-400">
+            <span className="font-mono">{activeTab === 'sql' ? 'supabase_schema.sql' : '.env.local'}</span>
+            <button
+              onClick={() => copyToClipboard(activeTab === 'sql' ? sqlCode : envCode, activeTab)}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs transition"
+            >
+              {copied === activeTab ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-[#34C759]" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Copy Code</span>
+                </>
+              )}
+            </button>
+          </div>
 
-          <pre className="whitespace-pre-wrap leading-relaxed">
-            {activeTab === 'sql' && sqlCode}
-            {activeTab === 'actions' && serverActionCode}
-            {activeTab === 'env' && envGuide}
+          <pre className="p-4 overflow-y-auto text-xs font-mono text-gray-300 leading-relaxed flex-1 select-text">
+            {activeTab === 'sql' ? sqlCode : envCode}
           </pre>
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center gap-1.5">
+            <Shield className="w-3.5 h-3.5 text-[#007AFF]" />
+            <span>Enforces multi-tenant isolation by tenant_id & role claim</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-medium transition"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
