@@ -1,0 +1,6 @@
+{
+  "name": "Aster College - School Management ERP",
+  "description": "Next.js & Supabase SaaS School Management System (ERP) featuring iOS 27 dark aesthetic, multi-tenant RBAC, and responsive biometric sign-in.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

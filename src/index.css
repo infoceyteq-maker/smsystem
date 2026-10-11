@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ios-bg: #000000;
+    --ios-surface: #1C1C1E;
+    --ios-surface-secondary: #2C2C2E;
+    --ios-surface-tertiary: #3A3A3C;
+    --ios-blue: #0A84FF;
+    --ios-green: #30D158;
+    --ios-red: #FF453A;
+    --ios-muted: #8E8E93;
+    --ios-border: rgba(255, 255, 255, 0.08);
+  }
+
+  body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  }
+}
+
+/* Custom glowing pulse for biometric & focus states */
+@keyframes faceid-scan {
+  0% { transform: translateY(-80%); opacity: 0.2; }
+  50% { transform: translateY(0%); opacity: 0.9; }
+  100% { transform: translateY(80%); opacity: 0.2; }
+}
+
+.animate-scan-line {
+  animation: faceid-scan 1.8s ease-in-out infinite;
+}
+
+/* Custom sleek scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #2C2C2E;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3A3A3C;
+}
